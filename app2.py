@@ -38,6 +38,7 @@ if st.button("Hitung dan Simpan"):
                 na = (s*5 + f*3 + t*2) / bw
                 g = "A" if na>=85 else "B" if na>=75 else "C" if na>=60 else "D"
                 st.session_state.data_siswa.append({"Nama": nama, "Nilai Akhir": na, "Grade": g})
-                st.success(f"Data {nama} disimpan!"); st.rerun()
+                st.success(f"Data {nama} disimpan!")
+                st.rerun()
             except: st.error("Input harus angka!")
     else: st.error("Nama harus diisi!")
