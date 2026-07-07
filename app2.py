@@ -2,28 +2,24 @@ import streamlit as st
 import pandas as pd
 
 st.set_page_config(page_title="Sistem Grading SD", layout="centered")
-if 'data_siswa' not in st.session_state: st.session_state.data_siswa = []
+
+Inisialisasi session state
+if 'data_siswa' not in st.session_state: 
+    st.session_state.data_siswa = []
 
 st.title("Sistem Grading Otomatis Sekolah Dasar")
-st.subheader("Rekap Nilai Siswa")
-if st.session_state.data_siswa:
-    df = pd.DataFrame(st.session_state.data_siswa)
-    df['Nilai Akhir'] = df['Nilai Akhir'].map('{:.2f}'.format)
-    st.table(df)
-else:
-    st.info("Belum ada data siswa yang dimasukkan.")
 
-st.divider()
+--- BAGIAN INPUT (Dipindah ke atas agar state terupdate sebelum render tabel) ---
 st.subheader("Input Data Siswa")
-nama = st.text_input("Nama Siswa")
-col1, col2, col3 = st.columns(3)
-with col1: sumatif_raw = st.text_input("Nilai Sumatif (Bobot 5)", help="0-100")
-with col2: formatif_raw = st.text_input("Nilai Formatif (Bobot 3)", help="0-100")
-with col3: tambahan_raw = st.text_input("Nilai Tambahan (Bobot 2)", help="0-100", value="0")
+with st.expander("Klik untuk Input Data Baru", expanded=True):
+    nama = st.text_input("Nama Siswa")
+    col1, col2, col3 = st.columns(3)
+    with col1: sumatif_raw = st.text_input("Nilai Sumatif (Bobot 5)", help="0-100")
+    with col2: formatif_raw = st.text_input("Nilai Formatif (Bobot 3)", help="0-100")
+    with col3: tambahan_raw = st.text_input("Nilai Tambahan (Bobot 2)", help="0-100", value="0")
 
 if st.button("Hitung dan Simpan"):
     if nama:
-        # Cek apakah nama sudah ada di dalam session_state
         existing_names = [s['Nama'] for s in st.session_state.data_siswa]
         if nama in existing_names:
             st.warning(f"Peringatan: Nama {nama} sudah ada di dalam daftar!")
@@ -40,5 +36,4 @@ if st.button("Hitung dan Simpan"):
                 st.session_state.data_siswa.append({"Nama": nama, "Nilai Akhir": na, "Grade": g})
                 st.success(f"Data {nama} disimpan!")
                 st.rerun()
-            except: st.error("Input harus angka!")
-    else: st.error("Nama harus diisi!")
+            except:
